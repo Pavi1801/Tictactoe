@@ -2,6 +2,8 @@ const boxes = document.querySelectorAll(".box");
 const playerDisplay = document.getElementById("display-player");
 let tictac = [0, 0, 0, 0, 0, 0, 0, 0, 0];
 let curentPlayer = 1;
+let showAlertDraw=0;
+let showAlertWin=0;
 const winningConditions = [
   [0, 1, 2],
   [3, 4, 5],
@@ -44,8 +46,7 @@ function checkGameStatus(boxid,curentPlayer){
         let second=currentRule[1];
         let third=currentRule[2];
         if((tictac[first]===curentPlayer)&&(tictac[second]===curentPlayer)&&(tictac[third]===curentPlayer)){
-            alert( `Player ${curentPlayer} Wins`);
-            window.location.reload();
+            showAlertWin=1;
         }   
     }
     let isDraw=true;
@@ -55,9 +56,23 @@ function checkGameStatus(boxid,curentPlayer){
         isDraw=false;
     }
     if(isDraw){
+        showAlertDraw=1;
+    }
+}
+
+function displayResult(cplayer){
+  if(showAlertDraw || showAlertWin){
+    setTimeout(()=>{
+      if(showAlertWin){
+        alert(`Player ${cplayer} Wins`);
+        window.location.reload();
+      }
+      else if (showAlertDraw){
         alert("Match Draw");
         window.location.reload();
-    }
+      }
+    },70)
+  }
 }
 boxes.forEach((item) => {
   item.addEventListener("click", (e) => {
@@ -65,6 +80,7 @@ boxes.forEach((item) => {
     console.log(boxid);
     displayXO(e.target);
     checkGameStatus(boxid,curentPlayer);
+    displayResult(curentPlayer);
     changePlayer();
   });
 });
